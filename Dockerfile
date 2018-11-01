@@ -1,9 +1,9 @@
-FROM alpine:latest
+FROM golang:alpine
 MAINTAINER Rajesh Jain <rjain15@gmail.com>
 RUN apk update
 RUN apk upgrade
 
-RUN apk --no-cache add jq bash
+RUN apk --no-cache --virtual add jq bash git
 
 ADD https://cli.run.pivotal.io/stable?release=linux64-binary /tmp/cf-cli.tgz
 RUN mkdir -p /usr/local/bin && \
@@ -22,11 +22,7 @@ RUN mkdir -p /usr/local/bin && \
 # rm -f /tmp/autopilot-linux
 
 # Install yaml cli
-ADD https://github.com/mikefarah/yaml/releases/download/1.10/yaml_linux_amd64 /tmp/yaml_linux_amd64
-RUN install /tmp/yaml_linux_amd64 /usr/local/bin/yaml && \
-  yaml --help && \
-  rm -f /tmp/yaml_linux_amd64
-
+RUN go get gopkg.in/yaml.v2
 
 RUN mkdir -p /opt
 WORKDIR /app
